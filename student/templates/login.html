@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Login</title>
+    <style>
+        .error {
+            color: red;
+            display: none;
+        }
+        .form-container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Teacher Login</h2>
+        <form method="POST" id="login-form">
+            {% csrf_token %}
+            <div>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <div id="username-error" class="error">Please enter a username.</div>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div id="password-error" class="error">Please enter a password.</div>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error" style="display:none;"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const errorMessage = document.getElementById('error-message');
+        const usernameField = document.getElementById('username');
+        const passwordField = document.getElementById('password');
+        const usernameError = document.getElementById('username-error');
+        const passwordError = document.getElementById('password-error');
+
+        form.addEventListener('submit', function(event) {
+            let valid = true;
+
+            // Reset error messages
+            errorMessage.style.display = 'none';
+            usernameError.style.display = 'none';
+            passwordError.style.display = 'none';
+
+            // Client-side validation
+            if (!usernameField.value.trim()) {
+                usernameError.style.display = 'block';
+                valid = false;
+            }
+            if (!passwordField.value.trim()) {
+                passwordError.style.display = 'block';
+                valid = false;
+            }
+
+            // If form is invalid, prevent submission
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+
+        {% if messages %}
+            {% for message in messages %}
+                errorMessage.innerText = "{{ message }}";
+                errorMessage.style.display = 'block';
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+</html>
